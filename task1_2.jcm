@@ -1,0 +1,33 @@
+/*
+  JaCaMo Project File
+  This file defines the initial state of the Multi-Agent System.
+  See here for more details: http://jacamo.sourceforge.net/doc/jcm.html.
+*/
+
+mas lab {
+    // organization agent
+    agent org_agent 
+
+    // sensing agents
+    agent sensing_agent_1 : sensing_agent.asl {}
+    agent sensing_agent_2 : sensing_agent.asl {}
+    agent sensing_agent_3 : sensing_agent.asl {}
+    agent sensing_agent_4 : sensing_agent.asl {}
+
+    // rogue agents
+    agent sensing_agent_5 : rogue_agent.asl {}
+    agent sensing_agent_6 : rogue_agent.asl {}
+    agent sensing_agent_7 : rogue_agent.asl {}
+    agent sensing_agent_8 : rogue_agent.asl {}
+
+    // rogue leader agent
+    agent sensing_agent_9 : rogue_leader_agent.asl {}
+
+    // acting agent
+    agent acting_agent : acting_agent.asl {}
+
+    workspace lab_monitoring_org {
+        artifact weatherStation: tools.WeatherStation
+        artifact converter: tools.Converter 
+    }
+}
