@@ -35,7 +35,16 @@ i_have_plans_for(R) :- not (role_goal(R,G) & not has_plan_for(G)).
 	.print("Reading the temperature");
 	readCurrentTemperature(47.42, 9.37, Celcius); // reads the current temperature using the artifact
 	.print("Read temperature (Celcius): ", Celcius);
-	.broadcast(tell, temperature(Celcius)). // broadcasts the temperature reading
+	.broadcast(tell, temperature(Celcius)); // broadcasts the temperature reading
+	.broadcast(tell, witness_reputation(N, sensing_agent_1, "Trust!!", 1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_2, "Trust!!", 1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_3, "Trust!!", 1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_4, "Trust!!", 1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_5, "Distrust!!", -1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_6, "Distrust!!", -1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_7, "Distrust!!", -1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_8, "Distrust!!", -1));
+	.broadcast(tell, witness_reputation(N, sensing_agent_9, "Distrust!!", -1)).
 
 /* 
  * Plan for reacting to the addition of the belief organization_deployed(OrgName)

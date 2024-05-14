@@ -1,6 +1,7 @@
 // acting agent
 
 /* Initial beliefs and rules */
+degrees(Celcius) :- temperature(Celcius)[source(Agent)] & p(Value,Agent).
 
 // The agent has a belief about the location of the W3C Web of Thing (WoT) Thing Description (TD)
 // that describes a Thing of type https://ci.mines-stetienne.fr/kg/ontology#PhantomX
@@ -82,7 +83,47 @@ robot_td("https://raw.githubusercontent.com/Interactions-HSG/example-tds/main/td
 */
 @select_reading_task_0_plan
 +!select_reading(TempReadings, Celcius) : true <-
-    .nth(0, TempReadings, Celcius).
+	.findall(Agent, interaction_trust(_, Agent, _, _), Agents);
+	.print("finding agents with trust values");
+	!process(Agents);
+	.findall(p(Value,Agent), trust_level(Value, Agent), Result);
+	.print("finding trust values of agents");
+	.max(Result, Max);
+	.print("Best trust value: ", Max);
+	+Max;
+	?degrees(Celcius);
+	.print("Trusted value: ", Celcius).
+
+
++!process(Agents) : Agents \== [] <-
+	.nth(0, Agents, CurrAgent);
+	//getting first agent of list
+	.findall(IT, interaction_trust(_,CurrAgent,_,IT), ListIT);
+	//.findall(CR, certified_reputation(_,CurrAgent,_,CR), ListCR);
+	//.findall(W, witness_reputation(_,CurrAgent,_,W), ListW);
+	.length(ListIT, LenIT);
+	//.length(ListCR, LenCR);
+	//.length(ListW, LenW);
+	!make_sum(ListIT, 0, SumIT);
+	//?make_sum(ListCR, 0, SumCR);
+	//?make_sum(ListW, 0, SumW);
+	AVG = (SumIT / LenIT);
+	//AVG = ((SumIT / LenIT) / 2) + ((SumCR / LenCR) / 2); 
+	//AVG = ((SumIT / LenIT) / 3) + ((SumCR / LenCR) / 3) + ((SumW / LenW) / 3);
+	+trust_level(AVG, CurrAgent);
+	.delete(CurrAgent, Agents, NewAgents);
+	!process(NewAgents).
+
+//list empty
++!process(Agents) : true <-
+	.print("done").
+
++!make_sum([Head | Tail], Agg, Sum): true <-
+	NewAgg = Head + Agg;
+	?make_sum(Tail, NewAgg, Sum).
+
++!make_sum([], Sum, Sum).
+
 
 /* 
  * Plan for reacting to the addition of the goal !manifest_temperature

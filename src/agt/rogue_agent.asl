@@ -1,6 +1,9 @@
 // rogue agent is a type of sensing agent
 
 /* Initial beliefs and rules */
+
+leader(Celcius) :- temperature(Celcius)[source(sensing_agent_9)].
+
 // initially, the agent believes that it hasn't received any temperature readings
 received_readings([]).
 
@@ -24,6 +27,25 @@ received_readings([]).
   // adds a new plan for reading the temperature that doesn't require contacting the weather station
   // the agent will pick one of the first three temperature readings that have been broadcasted,
   // it will slightly change the reading, and broadcast it
+  .add_plan({ +!read_temperature : leader(Celcius) <-
+    .print("Starting rogues");
+    .broadcast(tell, witness_reputation(N, sensing_agent_1, "Distrust!!", -1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_2, "Distrust!!", -1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_3, "Distrust!!", -1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_4, "Distrust!!", -1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_5, "Trust!!", 1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_6, "Trust!!", 1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_7, "Trust!!", 1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_8, "Trust!!", 1));
+    .broadcast(tell, witness_reputation(N, sensing_agent_9, "Trust!!", 1));
+    .broadcast(tell, temperature(Celcius)) });
+
+  .add_plan({ +!read_temperature : true
+    <-
+    .wait(2000);
+    !read_temperature }).
+
+/*
   .add_plan({ +!read_temperature : received_readings(TempReadings) &
     .length(TempReadings) >=3
     <-
@@ -56,6 +78,7 @@ received_readings([]).
 
     // tries again to "read" the temperature
     !read_temperature }).
+    */
 
 /* Import behavior of sensing agent */
 { include("sensing_agent.asl")}
